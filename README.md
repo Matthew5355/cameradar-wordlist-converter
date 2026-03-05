@@ -1,3 +1,8 @@
+![Python Version](https://img.shields.io/badge/python-3.6%2B-blue.svg)
+![License](https://img.shields.io/badge/license-MIT-green.svg)
+![Tool](https://img.shields.io/badge/target-Cameradar-orange.svg)
+![Cybersec](https://img.shields.io/badge/sector-Pentesting-red.svg)
+
 # 🎥 Cameradar Wordlist Converter
 
 A lightweight Python utility to convert standard password wordlists (`.txt`) into the specific JSON format required by **Cameradar**.
