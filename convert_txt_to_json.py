@@ -4,15 +4,14 @@ import os
 
 # 1. Setup the Command Line Arguments
 parser = argparse.ArgumentParser(description='Convert TXT wordlists to Cameradar-compatible JSON.')
-parser.add_argument('-f', '--file', required=True, help='Input .txt file (e.g., rockyou.txt)')
+parser.add_argument('-f', '--file', required=True, help='Input .txt file (e.g., Hickivision.txt)')
 parser.add_argument('-o', '--output', required=True, help='Output .json file name')
 
 args = parser.parse_args()
 
-# 2. Define target usernames (Commonly found in Hikvision/Dahua cameras)
-# As mentioned in the video, 'admin' is the most common target.
+# 2. Define target usernames
 usernames = ['admin', 'root', 'administrator']
-credentials = []
+credentials_list = []
 
 print(f"--- Starting conversion for: {args.file} ---")
 
@@ -26,19 +25,22 @@ try:
         for line in f:
             password = line.strip()
             if password:
-                # For every password, we create an entry for each username
                 for user in usernames:
-                    credentials.append({
+                    credentials_list.append({
                         "username": user,
                         "password": password
                     })
 
-    # 3. Save as a JSON array (The format required by Cameradar)
+    # 3. Wrap the list in a "credentials" object (Required for Cameradar v6)
+    # This fixes the "cannot unmarshal array into Go value" error
+    final_json_structure = {
+        "credentials": credentials_list
+    }
+
     with open(args.output, 'w', encoding='utf-8') as f:
-        json.dump(credentials, f, indent=2)
-    
-    print(f"Success! Your JSON dictionary is ready: {args.output}")
-    print(f"Total combinations generated: {len(credentials)}")
+        json.dump(final_json_structure, f, indent=2)
+        
+    print(f"--- Success! Created: {args.output} ---")
 
 except Exception as e:
-    print(f"An unexpected error occurred: {e}")
+    print(f"An error occurred: {e}")
